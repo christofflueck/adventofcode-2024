@@ -1,11 +1,10 @@
-from collections import Counter
 from typing import List, Tuple
 
 from run_util import run_puzzle
 
 
 def parse_data(data: str):
-    return data.split('\n')
+    return data.split("\n")
 
 
 DIRECTIONS = [
@@ -19,7 +18,7 @@ DIRECTIONS = [
     (0, -1),
 ]
 
-SEARCH = 'XMAS'
+SEARCH = "XMAS"
 
 
 def check_for_xmas(data: List[str], x: int, y: int, direction: Tuple[int, int]):
@@ -39,7 +38,7 @@ def part_a(data: str) -> int:
     total = 0
     for y, row in enumerate(data):
         for x, char in enumerate(row):
-            if char == 'X':
+            if char == "X":
                 for direction in DIRECTIONS:
                     if check_for_xmas(data, x, y, direction):
                         total = total + 1
@@ -48,9 +47,13 @@ def part_a(data: str) -> int:
 
 
 def check_for_mas(data: List[str], x: int, y: int):
-    corners = data[y - 1][x - 1] + data[y - 1][x + 1] + data[y + 1][x + 1] + data[y + 1][x - 1]
-    chars = Counter(corners)
-    return chars.get('M') == 2 and chars.get('S') == 2 and corners[0] != corners[2] and corners[1] != corners[3]
+    corners = (
+        data[y - 1][x - 1]
+        + data[y - 1][x + 1]
+        + data[y + 1][x + 1]
+        + data[y + 1][x - 1]
+    )
+    return corners in ("MSSM", "SSMM", "SMMS", "MMSS")
 
 
 def part_b(data: str) -> int:
@@ -62,7 +65,7 @@ def part_b(data: str) -> int:
         for x, char in enumerate(row):
             if x < 1 or x >= len(row) - 1:
                 continue
-            if char == 'A':
+            if char == "A":
                 if check_for_mas(data, x, y):
                     total = total + 1
 
@@ -71,7 +74,8 @@ def part_b(data: str) -> int:
 
 def main():
     examples = [
-        ("""MMMSXXMASM
+        (
+            """MMMSXXMASM
 MSAMXMSMSA
 AMXSXMAAMM
 MSAMASMSMX
@@ -80,11 +84,14 @@ XXAMMXXAMA
 SMSMSASXSS
 SAXAMASAAA
 MAMMMXMMMM
-MXMXAXMASX""", 18, 9)
+MXMXAXMASX""",
+            18,
+            9,
+        )
     ]
-    day = int(__file__.split('/')[-1].split('.')[0][-2:])
+    day = int(__file__.split("/")[-1].split(".")[0][-2:])
     run_puzzle(day, part_a, part_b, examples)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
