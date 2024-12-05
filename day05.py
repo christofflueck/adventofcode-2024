@@ -6,33 +6,26 @@ from run_util import run_puzzle
 
 def parse_data(data: str):
     rules, updates = data.split("\n\n")
-    rules = [(int(row[0:2]), int(row[3:5])) for row in rules.split('\n')]
+    rules = [list(map(int, row.split('|'))) for row in rules.split('\n')]
     rule_lookup = defaultdict(list)
     for before, after in rules:
         rule_lookup[before].append(after)
-    updates = [[int(x) for x in row.split(',')] for row in updates.split('\n')]
+    updates = [list(map(int, row.split(','))) for row in updates.split('\n')]
     return updates, rule_lookup
 
 
 def is_update_valid(update, rules):
-    before = []
-    for page in update:
-        for prev in before:
+    for i, page in enumerate(update):
+        for prev in update[:i]:
             if prev in rules[page]:
                 return False
-        before.append(page)
     return True
 
 
 def part_a(data: str) -> int:
     updates, rules = parse_data(data)
 
-    total = 0
-    for book in updates:
-        if is_update_valid(book, rules):
-            total = total + book[len(book) // 2]
-
-    return total
+    return sum([book[len(book) // 2] if is_update_valid(book, rules) else 0 for book in updates])
 
 
 def part_b(data: str) -> int:
@@ -45,13 +38,7 @@ def part_b(data: str) -> int:
             return -1
         return 0
 
-    total = 0
-    for update in updates:
-        if not is_update_valid(update, rules):
-            sorted_update = sorted(update, key=cmp_to_key(compare_page))
-            total = total + sorted_update[len(sorted_update) // 2]
-
-    return total
+    return sum([sorted(update, key=cmp_to_key(compare_page))[len(update) // 2] if not is_update_valid(update, rules) else 0 for update in updates])
 
 
 def main():
