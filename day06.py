@@ -47,7 +47,7 @@ def part_b(data: str) -> int:
     loops = 0
     for test_x in range(max_x + 1):
         for test_y in range(max_y + 1):
-            if (test_x, test_y) in obstacles:
+            if (test_x, test_y) in obstacles or (test_x, test_y) == player:
                 continue
             x, y = player
             visited = set()
@@ -58,7 +58,7 @@ def part_b(data: str) -> int:
                 next_x = x + DIRECTIONS[facing][0]
                 next_y = y + DIRECTIONS[facing][1]
 
-                if (next_x, next_y) in obstacles or next_x == test_x and next_y == test_y:
+                if (next_x, next_y) in obstacles or (next_x == test_x and next_y == test_y):
                     facing = (facing + 1) % len(DIRECTIONS)
                     continue
                 x, y = next_x, next_y
