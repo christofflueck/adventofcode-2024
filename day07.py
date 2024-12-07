@@ -6,7 +6,7 @@ def parse_data(data: str) -> List[Tuple[int, List[int]]]:
     equations = []
     for row in data.splitlines():
         result, values = row.split(": ")
-        equations.append((int(result), list(map(int, values.split()))))
+        equations.append((int(result), list(reversed(list(map(int, values.split()))))))
     return equations
 
 
@@ -15,7 +15,7 @@ def part_a(data: str) -> int:
     total = 0
     for result, components in equations:
         prev = {result}
-        for component in reversed(components[1:]):
+        for component in components[:-1]:
             next = set()
             for num in prev:
                 if num % component == 0:
@@ -25,7 +25,7 @@ def part_a(data: str) -> int:
             prev = next
             if not prev:
                 break
-        if components[0] in prev:
+        if components[-1] in prev:
             total += result
     return total
 
@@ -35,7 +35,7 @@ def part_b(data: str) -> int:
     total = 0
     for result, components in equations:
         prev = {result}
-        for component in reversed(components[1:]):
+        for component in components[:-1]:
             next = set()
             for branch in prev:
                 if branch % component == 0:
@@ -51,7 +51,7 @@ def part_b(data: str) -> int:
             if not next:
                 break
             prev = next
-        if components[0] in prev:
+        if components[-1] in prev:
             total += result
     return total
 
