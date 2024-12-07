@@ -32,15 +32,19 @@ def part_b(data: str) -> int:
     equations = parse_data(data)
     total = 0
     for result, components in equations:
-        prev = set([components[0]])
-        next = set()
-        for i in range(1, len(components)):
+        prev = []
+        next = []
+        for component in components:
+            if len(prev) == 0:
+                prev.append(component)
+                continue
+            
             for num in prev:
-                next.add(num + components[i])
-                next.add(num * components[i])
-                next.add(int(str(num) + str(components[i])))
+                next.append(num + component)
+                next.append(num * component)
+                next.append(num * 10 ** (len(str(component))) + component)
             prev = next
-            next = set()
+            next = []
         if result in prev:
             total += result
         
