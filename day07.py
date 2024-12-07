@@ -14,17 +14,19 @@ def part_a(data: str) -> int:
     equations = parse_data(data)
     total = 0
     for result, components in equations:
-        prev = set([components[0]])
-        next = set()
-        for i in range(1, len(components)):
-            for num in prev:
-                next.add(num + components[i])
-                next.add(num * components[i])
-            prev = next
+        prev = {result}
+        for component in reversed(components[1:]):
             next = set()
-        if result in prev:
+            for num in prev:
+                if num % component == 0:
+                    next.add(num // component)
+                if num > component:
+                    next.add(num - component)
+            prev = next
+            if not prev:
+                break
+        if components[0] in prev:
             total += result
-        
     return total
 
 
@@ -32,22 +34,25 @@ def part_b(data: str) -> int:
     equations = parse_data(data)
     total = 0
     for result, components in equations:
-        prev = []
-        next = []
-        for component in components:
-            if len(prev) == 0:
-                prev.append(component)
-                continue
-            
-            for num in prev:
-                next.append(num + component)
-                next.append(num * component)
-                next.append(num * 10 ** (len(str(component))) + component)
+        prev = {result}
+        for component in reversed(components[1:]):
+            next = set()
+            for branch in prev:
+                if branch % component == 0:
+                    next.add(branch // component)
+                if branch > component:
+                    next.add(branch - component)
+                if branch > component:
+                    power = 10
+                    while power <= component:
+                        power *= 10
+                    if branch % power == component:
+                        next.add(branch // power)
+            if not next:
+                break
             prev = next
-            next = []
-        if result in prev:
+        if components[0] in prev:
             total += result
-        
     return total
 
 
