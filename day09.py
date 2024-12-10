@@ -1,5 +1,8 @@
-from typing import List, Optional, Tuple
+from typing import Optional
+
 from run_util import run_puzzle
+
+# Please dont judge me based of this solution. I know its bad
 
 
 class Block:
@@ -7,6 +10,9 @@ class Block:
         self.id = id
         self.length = length
         self.value = value
+
+    def __str__(self):
+        return f"{'.' if self.value is None else str(self.value)}" * self.length
 
 
 def parse_data(data: str):
@@ -51,10 +57,6 @@ def part_a(data: str) -> int:
     return sum([i * val for i, val in enumerate(result)])
 
 
-# 0099811188827773336446555566
-# 009981118882777333644655556665
-
-
 def parse_data_b(data: str):
     blocks = []
     for i, char in enumerate(data):
@@ -65,12 +67,45 @@ def parse_data_b(data: str):
 def part_b(data: str) -> int:
     blocks = parse_data_b(data)
 
-    for i in range(len(blocks) - 1, -1, -1):
+    i = len(blocks) - 1
+    changed = False
+    while True:
+        if i < 0:
+            if changed:
+                i = len(blocks) - 1
+                changed = False
+            else:
+                break
+
         block = blocks[i]
         if block.value is None:
+            i -= 1
             continue
-        # I  got a headache and a fever. continuing later
-    return 0
+
+        for j in range(i):
+            if blocks[j].value is None:
+                if blocks[j].length == block.length:
+                    blocks[j].value = block.value
+                    block.value = None
+                    changed = True
+                    break
+                elif blocks[j].length > block.length:
+                    blocks[j].length -= block.length
+                    blocks.insert(i + 1, Block(-1, block.length, None))
+                    blocks.insert(j, blocks.pop(i))
+                    changed = True
+                    i += 1
+                    break
+        i -= 1
+
+    result = 0
+    i = 0
+    for block in blocks:
+        for _ in range(block.length):
+            if block.value is not None:
+                result += i * block.value
+            i += 1
+    return result
 
 
 def main():
