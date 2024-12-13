@@ -4,18 +4,7 @@ from run_util import run_puzzle
 
 
 def parse_data(data: str):
-    machines = []
-    regex = r"(\d+)"
-
-    for machine in data.split('\n\n'):
-        a, b, prize = machine.splitlines()
-
-        costs_a = re.findall(regex, a)
-        costs_b = re.findall(regex, b)
-        prize = re.findall(regex, prize)
-        machines.append(
-            ((int(costs_a[0]), int(costs_a[1])), (int(costs_b[0]), int(costs_b[1])), (int(prize[0]), int(prize[1]))))
-    return machines
+    return [list(map(int, re.findall(r"(\d+)", machine))) for machine in data.split('\n\n')]
 
 
 def calculate_cost(a_x, a_y, b_x, b_y, prize_x, prize_y):
@@ -28,21 +17,14 @@ def calculate_cost(a_x, a_y, b_x, b_y, prize_x, prize_y):
 
 def part_a(data: str) -> int:
     machines = parse_data(data)
-    costs = 0
 
-    for (a_x, a_y), (b_x, b_y), (prize_x, prize_y) in machines:
-        costs += calculate_cost(a_x, a_y, b_x, b_y, prize_x, prize_y)
-    return costs
+    return sum([calculate_cost(*machine) for machine in machines])
 
 
 def part_b(data: str) -> int:
     machines = parse_data(data)
-    costs = 0
 
-    for (a_x, a_y), (b_x, b_y), (prize_x, prize_y) in machines:
-        costs += calculate_cost(a_x, a_y, b_x, b_y, prize_x + 10000000000000, prize_y + 10000000000000)
-
-    return costs
+    return sum([calculate_cost(a_x, a_y, b_x, b_y, prize_x + 10000000000000, prize_y + 10000000000000) for a_x, a_y, b_x, b_y, prize_x, prize_y in machines])
 
 
 def main():
