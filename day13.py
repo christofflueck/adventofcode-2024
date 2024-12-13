@@ -16,15 +16,11 @@ def calculate_cost(a_x, a_y, b_x, b_y, prize_x, prize_y):
 
 
 def part_a(data: str) -> int:
-    machines = parse_data(data)
-
-    return sum([calculate_cost(*machine) for machine in machines])
+    return sum([calculate_cost(*machine) for machine in parse_data(data)])
 
 
 def part_b(data: str) -> int:
-    machines = parse_data(data)
-
-    return sum([calculate_cost(a_x, a_y, b_x, b_y, prize_x + 10000000000000, prize_y + 10000000000000) for a_x, a_y, b_x, b_y, prize_x, prize_y in machines])
+    return sum([calculate_cost(a_x, a_y, b_x, b_y, prize_x + 10000000000000, prize_y + 10000000000000) for a_x, a_y, b_x, b_y, prize_x, prize_y in parse_data(data)])
 
 
 def main():
