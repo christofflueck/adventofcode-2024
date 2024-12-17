@@ -56,26 +56,26 @@ def compute(program, ra, rb, rc):
 
 
 def part_a(data: str) -> int:
-    program, ra, rb, rc = parse_data(data)
-
-    return ",".join(map(str, map(int, compute(program, ra, rb, rc))))
+    return ",".join(map(str, compute(*parse_data(data))))
 
 
 def part_b(data: str) -> int:
     program, _, _, _ = parse_data(data)
-    
-    possible_ra = {0}
 
-    for p in range(1, len(program) + 1):
-        next_ras = set()
-        for ra in possible_ra:
-            for i in range(8):
-                next_ra = (ra << 3) + i
-                output = compute(program, next_ra, 0, 0)
-                if output == program[len(program) - p :]:
-                    next_ras.add(next_ra)
-        possible_ra = next_ras
-    return min(possible_ra)
+    queue = [(1, 0)]
+    solutions = set()
+
+    while queue:
+        p, ra = queue.pop()
+        for i in range(8):
+            next_ra = (ra << 3) + i
+            output = compute(program, next_ra, 0, 0)
+            if output == program[len(program) - p :]:
+                if p == len(program):
+                    solutions.add(next_ra)
+                else:
+                    queue.append((p + 1, next_ra))
+    return min(solutions)
 
 
 def main():
