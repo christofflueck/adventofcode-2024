@@ -1,3 +1,4 @@
+from collections import deque
 from run_util import run_puzzle
 
 
@@ -59,10 +60,10 @@ def part_a(data: str) -> int:
 def part_b(data: str) -> int:
     program, _, _, _ = parse_data(data)
 
-    queue = [(1, 0)]
+    queue = deque([(1, 0)])
 
     while queue:
-        p, ra = queue.pop(0)
+        p, ra = queue.pop()
         for i in range(8):
             next_ra = (ra << 3) + i
             output = compute(program, next_ra, 0, 0)
