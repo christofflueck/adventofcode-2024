@@ -63,7 +63,7 @@ def part_b(data: str) -> int:
     queue = deque([(1, 0)])
 
     while queue:
-        p, ra = queue.pop()
+        p, ra = queue.popleft()
         for i in range(8):
             next_ra = (ra << 3) + i
             output = compute(program, next_ra, 0, 0)
