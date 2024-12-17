@@ -1,6 +1,3 @@
-import math
-
-from tqdm import tqdm
 from run_util import run_puzzle
 
 
@@ -63,19 +60,16 @@ def part_b(data: str) -> int:
     program, _, _, _ = parse_data(data)
 
     queue = [(1, 0)]
-    solutions = set()
 
     while queue:
-        p, ra = queue.pop()
+        p, ra = queue.pop(0)
         for i in range(8):
             next_ra = (ra << 3) + i
             output = compute(program, next_ra, 0, 0)
             if output == program[len(program) - p :]:
                 if p == len(program):
-                    solutions.add(next_ra)
-                else:
-                    queue.append((p + 1, next_ra))
-    return min(solutions)
+                    return next_ra
+                queue.append((p + 1, next_ra))
 
 
 def main():
