@@ -59,10 +59,8 @@ def part_b(data: str) -> str:
 
     while path is not None:
         fallen_bytes += 1
-        next_byte = grid[fallen_bytes]
-        while next_byte not in path:
+        while grid[fallen_bytes] not in path:
             fallen_bytes += 1
-            next_byte = grid[fallen_bytes]
 
         path = get_shortest_path(grid, fallen_bytes + 1)
 
