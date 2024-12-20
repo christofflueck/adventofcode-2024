@@ -29,16 +29,16 @@ def parse_data(data: str):
                 break
 
 
-    return path
-
-def part_a(data: str) -> int:
-    path = parse_data(data)
     lookup = set(path)
     index = {pos: i for i, pos in enumerate(path)}
+    return lookup, index
+
+def part_a(data: str) -> int:
+    lookup, index = parse_data(data)
 
     possible_cheats = defaultdict(int)
 
-    for cheat_start in path:
+    for cheat_start in lookup:
         for dx, dy in DIRECTIONS:
             skipped = (cheat_start[0] + dx, cheat_start[1] + dy)
             target = (cheat_start[0] + 2 * dx, cheat_start[1] + 2 * dy)
@@ -62,14 +62,12 @@ for y in range(-20, 21):
         CHEATING_MOVES.add((x, y))
 
 def part_b(data: str) -> int:
-    path = parse_data(data)
-    lookup = set(path)
-    index = {pos: i for i, pos in enumerate(path)}
+    lookup, index = parse_data(data)
 
     possible_cheats = defaultdict(int)
 
 
-    for cheat_start in path:
+    for cheat_start in lookup:
         for dx, dy in CHEATING_MOVES:
             target = (cheat_start[0] + dx, cheat_start[1] + dy)
             if target not in lookup or index[target] < index[cheat_start]:
@@ -96,7 +94,7 @@ def main():
 #.#...#.#.#...#
 #.#.#.#.#.#.###
 #...#...#...###
-###############""", 0, 0)
+###############""", None, None)
     ]
     day = int(__file__.split('/')[-1].split('.')[0][-2:])
     run_puzzle(day, part_a, part_b, examples)
