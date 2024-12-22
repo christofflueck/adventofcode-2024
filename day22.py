@@ -2,26 +2,27 @@ from collections import defaultdict
 
 from run_util import run_puzzle
 
+MASK_24 = (1 << 24) - 1
 
 def parse_data(data: str):
     return [int(x) for x in data.split("\n")]
 
 
 def compute_next_number(secret: int) -> int:
-    secret = (secret ^ (secret << 6)) % 16777216
-    secret = (secret ^ (secret >> 5)) % 16777216
-    return (secret ^ (secret << 11)) % 16777216
+    secret = (secret ^ (secret << 6)) & 16777215
+    secret = (secret ^ (secret >> 5)) & 16777215
+    return (secret ^ (secret << 11)) & 16777215
 
 
 def part_a(data: str) -> int:
     secret_numbers = parse_data(data)
 
-    new_secret_numbers = []
+    new_secret_numbers = 0
     for secret in secret_numbers:
         for _ in range(2000):
             secret = compute_next_number(secret)
-        new_secret_numbers.append(secret)
-    return sum(new_secret_numbers)
+        new_secret_numbers+=secret
+    return new_secret_numbers
 
 
 def part_b(data: str) -> int:
