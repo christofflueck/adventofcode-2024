@@ -1,12 +1,12 @@
 import importlib
 import itertools
 import time
+import numpy as np
 
 from multiprocessing import Pool
 from aocd import get_data, submit
 
-days_solved = 21
-
+days_solved = 22
 
 
 def solve_day_part(day_and_part):
@@ -47,8 +47,9 @@ def main():
             duration /= 1e6
         print(f"{title}: {duration} ms")
 
+    times = list(timing for _, timing in results)
     print(
-        f"solved all {days_solved} days in {(end - start) / 1E6} ms, sum of parts {sum(timing for _, timing in results)/1E6} ms"
+        f"solved all {days_solved} days in {round((end - start) / 1E6, 2)} ms, sum of parts {round(sum(times)/1E6, 2)} ms, avg {round(np.average(times)/1E6, 2)} ms, median {round(np.median(times)/1E6, 2)} ms, p90 {round(np.percentile(times, 90)/1E6, 2)} ms"
     )
 
 
